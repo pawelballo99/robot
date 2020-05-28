@@ -18,6 +18,7 @@ public class Robot implements KeyListener {
     private Sphere[] joint;
     private Cylinder[] arm;
     private Transform3D tmp;
+    private double angles[];
     private float robotSpeed = 180;
 
     Robot(){
@@ -28,6 +29,7 @@ public class Robot implements KeyListener {
         TransformGroup bg = new TransformGroup();
 
         // define variables
+        angles=new double[6];
         tgArm = new TransformGroup[3];
         tgJoint = new TransformGroup[2];
         transformArm = new Transform3D[3];
@@ -99,33 +101,39 @@ public class Robot implements KeyListener {
     public void keyPressed(KeyEvent e) {
         // arm rotation
         if (e.getKeyChar() == 'a') {
+            angles[0]+=Math.toDegrees(Math.PI / robotSpeed);
             tmp.rotY(Math.PI / robotSpeed);
             transformArm[0].mul(tmp);
             tgArm[0].setTransform(transformArm[0]);
         }
         if (e.getKeyChar() == 'd') {
+            angles[0]-=Math.toDegrees(Math.PI / robotSpeed);
             tmp.rotY(-Math.PI / robotSpeed);
             transformArm[0].mul(tmp);
             tgArm[0].setTransform(transformArm[0]);
         }
         // shoulder rotation
         if (e.getKeyChar() == 'w') {
+            angles[1]+=Math.toDegrees(Math.PI / robotSpeed);
             tmp.rotZ(Math.PI / robotSpeed);
             transformJoint[0].mul(tmp);
             tgJoint[0].setTransform(transformJoint[0]);
         }
         if (e.getKeyChar() == 's') {
+            angles[1]-=Math.toDegrees(Math.PI / robotSpeed);
             tmp.rotZ(-Math.PI / robotSpeed);
             transformJoint[0].mul(tmp);
             tgJoint[0].setTransform(transformJoint[0]);
         }
         // elbow rotation
         if (e.getKeyChar() == 'q') {
+            angles[2]+=Math.toDegrees(Math.PI / robotSpeed);
             tmp.rotZ(Math.PI / robotSpeed);
             transformJoint[1].mul(tmp);
             tgJoint[1].setTransform(transformJoint[1]);
         }
         if (e.getKeyChar() == 'e') {
+            angles[2]-=Math.toDegrees(Math.PI / robotSpeed);
             tmp.rotZ(-Math.PI / robotSpeed);
             transformJoint[1].mul(tmp);
             tgJoint[1].setTransform(transformJoint[1]);
