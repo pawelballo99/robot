@@ -24,7 +24,6 @@ public class Robot implements KeyListener {
     private Shape3D[] pitchShapes;
     private Shape3D[] rollShapes;
     private Cylinder[] yawCylinder;
-//    private Cylinder[] arm;
     private Cylinder[] pitchCylinder;
     private Cylinder[] rollCylinder;
     private Transform3D tmp;
@@ -49,7 +48,6 @@ public class Robot implements KeyListener {
         pitchShapes = new Shape3D[2];
         rollShapes = new Shape3D[2];
         yawCylinder = new Cylinder[2];
-//        arm = new Cylinder[2];
         pitchCylinder = new Cylinder[1];
         rollCylinder = new Cylinder[1];
         joint = new Sphere[3];
@@ -120,7 +118,7 @@ public class Robot implements KeyListener {
         angles[1] = (float)(Math.PI/4);
         transformJoint[0] = new Transform3D();
         transformJoint[0].setTranslation(new Vector3f(0.0f, 0.25f, 0.0f));
-        tmp.rotZ(Math.PI/6);
+        tmp.rotZ(-Math.PI/4);
         transformJoint[0].mul(tmp);
         tgJoint[0] = new TransformGroup(transformJoint[0]);
         tgJoint[0].setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
@@ -138,39 +136,39 @@ public class Robot implements KeyListener {
         tgJoint[0].addChild(tgArm[1]);
 
         // joint between shoulder and elbow
-        joints[1] = new MyShapes().makeCustomCylinder(0.1f, 0.1f, 0.24f, 100);
-        joints[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        Transform3D rotationJoints1 = new Transform3D();
-        rotationJoints1.rotX(Math.PI/2);
-        TransformGroup rotTgJoints1 = new TransformGroup(rotationJoints1);
-        rotTgJoints1.addChild(joints[1]);
-        Transform3D transformJoints1 = new Transform3D();
-        transformJoints1.setTranslation(new Vector3f(0.0f, 0.0f, 0.12f));
-        TransformGroup tgJoints1 = new TransformGroup(transformJoints1);
-        tgJoints1.addChild(rotTgJoints1);
-
-        Shape3D joints1part0 = new MyShapes().makeCustomCylinder(0.1f, 0.1f, 0.24f, 100);
-        joints1part0.setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        Transform3D rotJoints1part0 = new Transform3D();
-        rotJoints1part0.rotX(Math.PI/2);
-        TransformGroup rotTgJoint1part0 = new TransformGroup(rotJoints1part0);
-        rotTgJoint1part0.addChild(joints1part0);
-        Transform3D transformJoint1part0 = new Transform3D();
-        transformJoint1part0.setTranslation(new Vector3f(0.0f, 0.0f, -0.12f));
-        TransformGroup tgJoint1part0 = new TransformGroup(transformJoint1part0);
-        tgJoint1part0.addChild(rotTgJoint1part0);
-
-
-        joints[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
+//        joints[1] = new MyShapes().makeCustomCylinder(0.1f, 0.1f, 0.24f, 100);
+//        joints[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
+//        Transform3D rotationJoints1 = new Transform3D();
+//        rotationJoints1.rotX(Math.PI/2);
+//        TransformGroup rotTgJoints1 = new TransformGroup(rotationJoints1);
+//        rotTgJoints1.addChild(joints[1]);
+//        Transform3D transformJoints1 = new Transform3D();
+//        transformJoints1.setTranslation(new Vector3f(0.0f, 0.0f, 0.12f));
+//        TransformGroup tgJoints1 = new TransformGroup(transformJoints1);
+//        tgJoints1.addChild(rotTgJoints1);
+//
+//        Shape3D joints1part0 = new MyShapes().makeCustomCylinder(0.1f, 0.1f, 0.24f, 100);
+//        joints1part0.setAppearance(createAppearance(new Color3f(Color.ORANGE)));
+//        Transform3D rotJoints1part0 = new Transform3D();
+//        rotJoints1part0.rotX(Math.PI/2);
+//        TransformGroup rotTgJoint1part0 = new TransformGroup(rotJoints1part0);
+//        rotTgJoint1part0.addChild(joints1part0);
+//        Transform3D transformJoint1part0 = new Transform3D();
+//        transformJoint1part0.setTranslation(new Vector3f(0.0f, 0.0f, -0.12f));
+//        TransformGroup tgJoint1part0 = new TransformGroup(transformJoint1part0);
+//        tgJoint1part0.addChild(rotTgJoint1part0);
+        joint[1] = new Sphere(0.15f);
+        joint[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
         angles[1] = (float)(Math.PI/4);
         transformJoint[1] = new Transform3D();
         transformJoint[1].setTranslation(new Vector3f(0.0f, 0.55f, 0.0f));
-        tmp.rotZ(-Math.PI*3/4);
+        tmp.rotZ(-Math.PI/4);
         transformJoint[1].mul(tmp);
         tgJoint[1] = new TransformGroup(transformJoint[1]);
         tgJoint[1].setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        tgJoint[1].addChild(tgJoint1part0);
-        tgJoint[1].addChild(tgJoints1);
+        tgJoint[1].addChild(joint[1]);
+//        tgJoint[1].addChild(tgJoint1part0);
+//        tgJoint[1].addChild(tgJoints1);
         tgArm[1].addChild(tgJoint[1]);
 
         // elbow
@@ -178,7 +176,7 @@ public class Robot implements KeyListener {
         arms[1] = new MyShapes().makeCustomCylinder(0.08f, 0.07f, 0.5f, 100);
         arms[1].setAppearance(createAppearance(new Color3f(Color.WHITE)));
         transformArm[2] = new Transform3D();
-        transformArm[2].setTranslation(new Vector3f(0.0f, 0.05f, 0.24f));
+        transformArm[2].setTranslation(new Vector3f(0.0f, 0.05f, 0.0f));
         tgArm[2] = new TransformGroup(transformArm[2]);
         tgArm[2].addChild(arms[1]);
         tgJoint[1].addChild(tgArm[2]);
@@ -395,6 +393,7 @@ public class Robot implements KeyListener {
                 tgArm[4].setTransform(transformArm[4]);
             }
         }
+        // roll rotation
         // yaw rotation
         if (e.getKeyChar() == 'j') {
             angles[5] -= Math.PI / robotSpeed;
