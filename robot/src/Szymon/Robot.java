@@ -95,7 +95,7 @@ public class Robot implements KeyListener {
 
         // joint between shoulder and elbow
         joint[1] = new Sphere(0.15f);
-        angles[1] = (float)(Math.PI/4);
+        angles[2] = (float)(Math.PI/4);
         joint[1].setAppearance(createAppearance(new Color3f(Color.WHITE)));
         transformJoint[1] = new Transform3D();
         transformJoint[1].setTranslation(new Vector3f(0.0f, 0.35f, 0.0f));
@@ -121,8 +121,8 @@ public class Robot implements KeyListener {
         yawCylinder[0].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
         yawCylinder[1] = new Cylinder(0.1f, 0.2f);
         yawCylinder[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-//        joint[2] = new Sphere(0.1f);
-//        joint[2].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
+        //joint[2] = new Sphere(0.1f);
+        //joint[2].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
 
         yawShapes[0] = new MyShapes().makeTriangularShape(0.15f, 0.05f, 0.2f, 0.01f);
         yawShapes[0].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
@@ -155,6 +155,7 @@ public class Robot implements KeyListener {
 
         transformArm[3] = new Transform3D();
         transformArm[3].setTranslation(new Vector3f(0.0f, 0.30f, 0.0f));
+        transformArm[3].setScale(0.85);
         tgArm[3] = new TransformGroup(transformArm[3]);
         tgArm[3].setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         tgArm[3].addChild(yawTg1);
@@ -240,10 +241,6 @@ public class Robot implements KeyListener {
 
         tgJoint[2].addChild(tgArm[5]);
 
-
-
-
-
         return bg;
     }
 
@@ -252,81 +249,105 @@ public class Robot implements KeyListener {
     public void keyPressed(KeyEvent e) {
         // arm rotation
         if (e.getKeyChar() == 'a') {
-            angles[0] += Math.PI / robotSpeed;
+            angles[0] -= Math.PI / robotSpeed;
             tmp.rotY(Math.PI / robotSpeed);
             transformArm[0].mul(tmp);
             tgArm[0].setTransform(transformArm[0]);
         }
         if (e.getKeyChar() == 'd') {
-            angles[0] -= Math.PI / robotSpeed;
+            angles[0] += Math.PI / robotSpeed;
             tmp.rotY(-Math.PI / robotSpeed);
             transformArm[0].mul(tmp);
             tgArm[0].setTransform(transformArm[0]);
         }
         // shoulder rotation
         if (e.getKeyChar() == 'w') {
-            angles[1] += Math.PI / robotSpeed;
-            tmp.rotZ(Math.PI / robotSpeed);
-            transformJoint[0].mul(tmp);
-            tgJoint[0].setTransform(transformJoint[0]);
+            angles[1] -= Math.PI / robotSpeed;
+            if(angles[1]<0) angles[1]=0;
+            else {
+                tmp.rotZ(Math.PI / robotSpeed);
+                transformJoint[0].mul(tmp);
+                tgJoint[0].setTransform(transformJoint[0]);
+            }
         }
         if (e.getKeyChar() == 's') {
-            angles[1] -= Math.PI / robotSpeed;
-            tmp.rotZ(-Math.PI / robotSpeed);
-            transformJoint[0].mul(tmp);
-            tgJoint[0].setTransform(transformJoint[0]);
+            angles[1] += Math.PI / robotSpeed;
+            if(angles[1]>95*Math.PI/180) angles[1]=(float)(95*Math.PI/180);
+            else {
+                tmp.rotZ(-Math.PI / robotSpeed);
+                transformJoint[0].mul(tmp);
+                tgJoint[0].setTransform(transformJoint[0]);
+            }
         }
         // elbow rotation
         if (e.getKeyChar() == 'q') {
-            angles[2] += Math.PI / robotSpeed;
-            tmp.rotZ(Math.PI / robotSpeed);
-            transformJoint[1].mul(tmp);
-            tgJoint[1].setTransform(transformJoint[1]);
+            angles[2] -= Math.PI / robotSpeed;
+            if(angles[2]<0) angles[2]=0;
+            else {
+                tmp.rotZ(Math.PI / robotSpeed);
+                transformJoint[1].mul(tmp);
+                tgJoint[1].setTransform(transformJoint[1]);
+            }
         }
         if (e.getKeyChar() == 'e') {
-            angles[2] -= Math.PI / robotSpeed;
-            tmp.rotZ(-Math.PI / robotSpeed);
-            transformJoint[1].mul(tmp);
-            tgJoint[1].setTransform(transformJoint[1]);
+            angles[2] += Math.PI / robotSpeed;
+            if(angles[2]>110*Math.PI/180) angles[2]=(float)(110*Math.PI/180);
+            else {
+                tmp.rotZ(-Math.PI / robotSpeed);
+                transformJoint[1].mul(tmp);
+                tgJoint[1].setTransform(transformJoint[1]);
+            }
         }
         // roll rotation
         if (e.getKeyChar() == 'u') {
-            angles[3] += Math.PI / robotSpeed;
+            angles[3] -= Math.PI / robotSpeed;
             tmp.rotY(Math.PI / robotSpeed);
             transformArm[3].mul(tmp);
             tgArm[3].setTransform(transformArm[3]);
         }
         if (e.getKeyChar() == 'o') {
-            angles[3] -= Math.PI / robotSpeed;
+            angles[3] += Math.PI / robotSpeed;
             tmp.rotY(-Math.PI / robotSpeed);
             transformArm[3].mul(tmp);
             tgArm[3].setTransform(transformArm[3]);
         }
         // pitch rotation
         if (e.getKeyChar() == 'i') {
-            angles[4] += Math.PI / robotSpeed;
-            tmp.rotZ(Math.PI / robotSpeed);
-            transformArm[4].mul(tmp);
-            tgArm[4].setTransform(transformArm[4]);
+            angles[4] -= Math.PI / robotSpeed;
+            if(angles[4]<-Math.PI/2) angles[4]=(float)(-Math.PI/2);
+            else {
+                tmp.rotZ(Math.PI / robotSpeed);
+                transformArm[4].mul(tmp);
+                tgArm[4].setTransform(transformArm[4]);
+            }
         }
         if (e.getKeyChar() == 'k') {
-            angles[4] -= Math.PI / robotSpeed;
-            tmp.rotZ(-Math.PI / robotSpeed);
-            transformArm[4].mul(tmp);
-            tgArm[4].setTransform(transformArm[4]);
+            angles[4] += Math.PI / robotSpeed;
+            if(angles[4]>Math.PI/2) angles[4]=(float)(Math.PI/2);
+            else {
+                tmp.rotZ(-Math.PI / robotSpeed);
+                transformArm[4].mul(tmp);
+                tgArm[4].setTransform(transformArm[4]);
+            }
         }
-        // roll rotation
+        // yaw rotation
         if (e.getKeyChar() == 'j') {
-            angles[5] += Math.PI / robotSpeed;
-            tmp.rotX(Math.PI / robotSpeed);
-            transformJoint[2].mul(tmp);
-            tgJoint[2].setTransform(transformJoint[2]);
+            angles[5] -= Math.PI / robotSpeed;
+            if(angles[5]<-Math.PI/4)angles[5]=(float)(-Math.PI/4);
+            else {
+                tmp.rotX(Math.PI / robotSpeed);
+                transformJoint[2].mul(tmp);
+                tgJoint[2].setTransform(transformJoint[2]);
+            }
         }
         if (e.getKeyChar() == 'l') {
-            angles[5] -= Math.PI / robotSpeed;
-            tmp.rotX(-Math.PI / robotSpeed);
-            transformJoint[2].mul(tmp);
-            tgJoint[2].setTransform(transformJoint[2]);
+            angles[5] += Math.PI / robotSpeed;
+            if(angles[5]>Math.PI/4)angles[5]=(float)(Math.PI/4);
+            else {
+                tmp.rotX(-Math.PI / robotSpeed);
+                transformJoint[2].mul(tmp);
+                tgJoint[2].setTransform(transformJoint[2]);
+            }
         }
 
     }

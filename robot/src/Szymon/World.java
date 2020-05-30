@@ -8,6 +8,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.util.concurrent.Flow;
 
 public class World extends JFrame {
@@ -28,7 +29,7 @@ public class World extends JFrame {
 
         canvas3d = new Canvas3D(config);
         canvas3d.setPreferredSize(new Dimension(800, 600));
-        canvas3d.addKeyListener(robot);
+        canvas3d.addKeyListener((KeyListener) robot);
 
         add("Center", canvas3d);
         pack();
@@ -85,7 +86,7 @@ public class World extends JFrame {
         MouseRotate myMouseRotate = new MouseRotate();
         myMouseRotate.setTransformGroup(world);
         myMouseRotate.setSchedulingBounds(bounds);
-        myMouseRotate.setFactor(0.01d,0.01d);
+        myMouseRotate.setFactor(0.007d,0.0007d);
         world.addChild(myMouseRotate);
 
         MouseWheelZoom myMouseWheelZoom = new MouseWheelZoom();
