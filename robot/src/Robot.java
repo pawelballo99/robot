@@ -159,7 +159,7 @@ public class Robot implements KeyListener {
 //        tgJoint1part0.addChild(rotTgJoint1part0);
         joint[1] = new Sphere(0.15f);
         joint[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        angles[1] = (float)(Math.PI/4);
+        angles[2] = (float)(Math.PI/4);
         transformJoint[1] = new Transform3D();
         transformJoint[1].setTranslation(new Vector3f(0.0f, 0.55f, 0.0f));
         tmp.rotZ(-Math.PI/4);
@@ -351,15 +351,21 @@ public class Robot implements KeyListener {
         // elbow rotation
         if (e.getKeyChar() == 'q') {
             angles[2] -= Math.PI / robotSpeed;
-            tmp.rotZ(Math.PI / robotSpeed);
-            transformJoint[1].mul(tmp);
-            tgJoint[1].setTransform(transformJoint[1]);
+            if(angles[2]<0) angles[2]=0;
+            else {
+                tmp.rotZ(Math.PI / robotSpeed);
+                transformJoint[1].mul(tmp);
+                tgJoint[1].setTransform(transformJoint[1]);
+            }
         }
         if (e.getKeyChar() == 'e') {
             angles[2] += Math.PI / robotSpeed;
-            tmp.rotZ(-Math.PI / robotSpeed);
-            transformJoint[1].mul(tmp);
-            tgJoint[1].setTransform(transformJoint[1]);
+            if(angles[2]>105*Math.PI/180) angles[2]=(float)(105*Math.PI/180);
+            else {
+                tmp.rotZ(-Math.PI / robotSpeed);
+                transformJoint[1].mul(tmp);
+                tgJoint[1].setTransform(transformJoint[1]);
+            }
         }
         // roll rotation
         if (e.getKeyChar() == 'u') {
