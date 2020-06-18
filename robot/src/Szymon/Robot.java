@@ -43,11 +43,22 @@ public class Robot implements KeyListener {
 //    private float robotSpeed = 180;
     private BoundingSphere bounds;
     private World world;
+
     public char lastMove;
+    public Boolean[] key;
+    public Boolean[] notAllow;
 
     Robot(World world){
         group = makeRobot();
         this.world = world;
+        key = new Boolean[256];
+        notAllow = new Boolean[12];
+        for(int i=0; i<256; i++){
+            key[i] = false;
+        }
+        for(int i=0; i<12; i++){
+            notAllow[i] = false;
+        }
     }
 
     private TransformGroup makeRobot(){

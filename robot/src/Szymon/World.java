@@ -9,7 +9,6 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 import java.awt.*;
-
 public class World extends JFrame {
 
     private Robot robot;
@@ -19,10 +18,11 @@ public class World extends JFrame {
     private Boolean collisionWithObject;
 
     public float objX = 1.5f;
-    public float objY = 1f;
+    public float objY = 0.5f;
     public float objZ = 0.0f;
     public Transform3D objectTransform;
     public TransformGroup objectTg;
+    public boolean objColl = false;
 
     World(){
         // tworzenie okienka
@@ -128,7 +128,7 @@ public class World extends JFrame {
         moving.setSchedulingBounds(bounds);
         world.addChild(moving);
 
-        GameLoop loop = new GameLoop(this);
+        GameLoop loop = new GameLoop(this, robot);
         loop.setSchedulingBounds(bounds);
         world.addChild(loop);
 
