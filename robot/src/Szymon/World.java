@@ -25,10 +25,16 @@ public class World extends JFrame {
     public JButton letGoObject;
     public JButton startRecording;
     public JButton stopRecording;
+    public JButton playRecording;
+    public JButton stopPlayRecording;
     public JButton resetCameraView;
     public TransformGroup world;
     public BranchGroup objectGroup;
     public Sphere object;
+    public boolean recording = false;
+    public boolean recordingPlay = false;
+    public int recordingCount = 0;
+    public int playingRecordCount = 0;
 
     World(){
         // tworzenie okienka
@@ -79,6 +85,14 @@ public class World extends JFrame {
         stopRecording.addActionListener(new ButtonsAction(this, robot));
         p.add(stopRecording);
 
+        playRecording = new JButton("Odtwórz nagranie");
+        playRecording.addActionListener(new ButtonsAction(this, robot));
+        p.add(playRecording);
+
+        stopPlayRecording = new JButton("Zatrzymaj odtwarzanie");
+        stopPlayRecording.addActionListener(new ButtonsAction(this, robot));
+        p.add(stopPlayRecording);
+
         resetCameraView = new JButton("Zresetuj widok kamery");
         resetCameraView.addActionListener(new ButtonsAction(this, robot));
         p.add(resetCameraView);
@@ -90,9 +104,9 @@ public class World extends JFrame {
         // simpleUniverse
         simpleU = new SimpleUniverse(canvas3d);
 
-        Transform3D przesuniecie_obserwatora = new Transform3D();
-        przesuniecie_obserwatora.set(new Vector3f(0.0f,0.5f,5.0f));
-        simpleU.getViewingPlatform().getViewPlatformTransform().setTransform(przesuniecie_obserwatora);
+        Transform3D observerPos = new Transform3D();
+        observerPos.set(new Vector3f(0.0f,0.5f,5.0f));
+        simpleU.getViewingPlatform().getViewPlatformTransform().setTransform(observerPos);
 
         // obsługa myszy, żeby można było obracać kamerą
         OrbitBehavior orbit = new OrbitBehavior(canvas3d, OrbitBehavior.REVERSE_ROTATE);
@@ -121,7 +135,7 @@ public class World extends JFrame {
         // tworzenie scian
         float szerokoscScian = 10f;
         Appearance appWall = new Appearance();
-        appWall.setTexture(createTexture("walls.jpg"));
+        appWall.setTexture(createTexture("grafika/walls.jpg"));
         // sciana 1
         TransformGroup wall1Tg = new TransformGroup();
         Shape3D wall1 = new MyShapes().makeGround(new Point3f(szerokoscScian, szerokoscScian, szerokoscScian),
@@ -183,7 +197,7 @@ public class World extends JFrame {
                 new Point3f(-szerokoscScian, 0f, szerokoscScian));
         gr.setUserData(new String("ground"));
         Appearance appGround = new Appearance();
-        appGround.setTexture(createTexture("floor.jpg"));
+        appGround.setTexture(createTexture("grafika/floor.jpg"));
         gr.setAppearance(appGround);
         CollisionDetector collisionGround = new CollisionDetector(gr, new BoundingSphere(), this, robot);
 

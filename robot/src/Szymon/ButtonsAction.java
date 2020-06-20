@@ -35,13 +35,14 @@ public class ButtonsAction implements ActionListener {
         if(bt == world.letGoObject){
             if(world.objHold){
                 world.objectGroup.detach();
+                world.objPos = robot.handPos();
                 world.objectTransform.setTranslation(world.objPos);
                 world.objectTg.setTransform(world.objectTransform);
 
                 CollisionDetector collisionObject = new CollisionDetector(world.object.getShape(), new BoundingSphere(new Point3d(), 0.15), world, robot);
-                BranchGroup tmpGroup = new BranchGroup();
-                tmpGroup.addChild(collisionObject);
-                world.world.addChild(tmpGroup);
+                BranchGroup tmpCollGroup = new BranchGroup();
+                tmpCollGroup.addChild(collisionObject);
+                world.world.addChild(tmpCollGroup);
 
                 world.world.addChild(world.objectGroup);
                 world.objHold = false;
@@ -51,10 +52,46 @@ public class ButtonsAction implements ActionListener {
             }
         }
         if(bt == world.startRecording){
-            // rozpoczecie nagrywania
+            // rozpoczęcie nagrywania
+            if(!world.recording && !world.recordingPlay) {
+                world.recording = true;
+                world.recordingCount = 0;
+                System.out.println("zaczeto nagrywac");
+            } else if(world.recordingPlay){
+                System.out.println("Nie mozna nagrywac bo wlasnie sie odtwarza");
+            } else{
+                System.out.println("wlasnie sie nagrywa");
+            }
         }
         if(bt == world.stopRecording){
             // przestanie nagrywania
+            if(world.recording) {
+                world.recording = false;
+                System.out.println("skonczono nagrywac");
+            } else{
+                System.out.println("nie nagrywa sie");
+            }
+        }
+        if(bt == world.playRecording){
+            // odtworzenie nagrywania
+            if(!world.recordingPlay && !world.recording) {
+                System.out.println("Odtwarzanie nagrania");
+                world.recordingPlay = true;
+                world.playingRecordCount = 0;
+            } else if(world.recording){
+                System.out.println("Nie mozna odtworzyc bo wlasnie sie nagrywa");
+            }  else{
+                System.out.println("Wlasnie sie odtwarza nagrywanie");
+            }
+        }
+        if(bt == world.stopPlayRecording){
+            // zatrzymanie odtwarzania nagrania
+            if(world.recordingPlay) {
+                System.out.println("Zatrzymanie odtwarzania");
+                world.recordingPlay = false;
+            } else{
+                System.out.println("Nie odtwarza sie teraz");
+            }
         }
         if(bt == world.resetCameraView){
             Transform3D przesuniecie_obserwatora = new Transform3D();

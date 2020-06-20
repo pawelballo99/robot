@@ -82,21 +82,17 @@ public class Robot {
         // podstawa
         Shape3D podst = new MyShapes().makeCustomCylinder(0.4f, 0.35f, 0.15f, 100);
         podst.setAppearance(createAppearance(new Color3f(Color.GRAY)));
-        podst.setUserData(new String("podst"));
         Transform3D transformPodst = new Transform3D();
         TransformGroup tgPodst = new TransformGroup(transformPodst);
         tgPodst.addChild(podst);
         bg.addChild(tgPodst);
 
-        // ramię
         // kształty
         arms[0] = new MyShapes().makeCustomCylinder(0.35f, 0.35f, 0.05f, 100);
         arms[0].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        arms[0].setUserData(new String("arms[0]"));
 
         Shape3D arm0part0 = new MyShapes().makeCustomCylinder(0.1f, 0.1f, 0.05f, 100);
         arm0part0.setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        arm0part0.setUserData(new String("arm0part0"));
 
         // ustawienie kształtów aby utworzyły dany obiekt
         Transform3D transformPart0 = new Transform3D();
@@ -106,10 +102,8 @@ public class Robot {
 
         Shape3D arm0part1 = new MyShapes().makeTriangularShape(0.3f, 0.1f, 0.3f, 0.03f);
         arm0part1.setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        arm0part1.setUserData(new String("arm0part1"));
         Shape3D arm0part2 = new MyShapes().makeTriangularShape(0.3f, 0.1f, 0.3f, 0.03f);
         arm0part2.setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        arm0part2.setUserData(new String("arm0part2"));
 
         Transform3D transformPart1 = new Transform3D();
         transformPart1.setTranslation(new Vector3f(0.0f, 0.05f, 0.25f));
@@ -121,6 +115,7 @@ public class Robot {
         TransformGroup tgPart2 = new TransformGroup(transformPart2);
         tgPart2.addChild(arm0part2);
 
+        // ramię
         // początkowy kąt ramienia
         angles[0] = 0;
 
@@ -137,12 +132,10 @@ public class Robot {
         // połączenie ramienia i barku
         joint[0] = new Sphere(0.25f);
         joint[0].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        joint[0].setUserData(new String("joint[0]"));
 
         // ustawienia położenia kształtów
         Shape3D joint0Part0 = new MyShapes().makeCustomCylinder(0.1f, 0.1f, 0.6f, 100);
         joint0Part0.setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        joint0Part0.setUserData(new String("joint0part0"));
         Transform3D rotationJoint0Part0 = new Transform3D();
         rotationJoint0Part0.rotX(Math.PI/2);
         TransformGroup tgRotJoint0Part0 = new TransformGroup(rotationJoint0Part0);
@@ -154,7 +147,7 @@ public class Robot {
         tgJoint0Part0.addChild(tgRotJoint0Part0);
 
         // początkowy kąt barku
-        angles[1] = (float)(Math.PI/4);
+        angles[1] = -(float)(Math.PI/4);
 
         transformJoint[0] = new Transform3D();
         transformJoint[0].setTranslation(new Vector3f(0.0f, 0.25f, 0.0f));
@@ -169,7 +162,6 @@ public class Robot {
         // bark
         arms[1] = new MyShapes().makeCustomCylinder(0.1f, 0.08f, 0.5f, 100);
         arms[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        arms[1].setUserData(new String("arms[1]"));
         transformArm[1] = new Transform3D();
         transformArm[1].setTranslation(new Vector3f(0.0f, 0.2f, 0.0f));
         tgArm[1] = new TransformGroup(transformArm[1]);
@@ -177,10 +169,9 @@ public class Robot {
         tgJoint[0].addChild(tgArm[1]);
 
         // połączenie między barkiem i łokciem ramienia
+        angles[2] = -(float)(Math.PI/4);
         joint[1] = new Sphere(0.15f);
         joint[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        joint[1].setUserData(new String("joint[1]"));
-        angles[2] = (float)(Math.PI/4);
         transformJoint[1] = new Transform3D();
         transformJoint[1].setTranslation(new Vector3f(0.0f, 0.55f, 0.0f));
         tmp.rotZ(-Math.PI/4);
@@ -193,7 +184,6 @@ public class Robot {
         // łokieć
         arms[2] = new MyShapes().makeCustomCylinder(0.08f, 0.07f, 0.5f, 100);
         arms[2].setAppearance(createAppearance(new Color3f(Color.WHITE)));
-        arms[2].setUserData(new String("arms[2]"));
         transformArm[2] = new Transform3D();
         transformArm[2].setTranslation(new Vector3f(0.0f, 0.05f, 0.0f));
         tgArm[2] = new TransformGroup(transformArm[2]);
@@ -201,20 +191,16 @@ public class Robot {
         tgJoint[1].addChild(tgArm[2]);
 
         // roll
-        yawCylinder[0] = new Cylinder(0.1f, 0.2f);
         angles[3] = 0;
+        yawCylinder[0] = new Cylinder(0.1f, 0.2f);
         yawCylinder[0].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        yawCylinder[0].setUserData(new String("yawCylinder[0]"));
         yawCylinder[1] = new Cylinder(0.1f, 0.2f);
         yawCylinder[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        yawCylinder[1].setUserData(new String("yawCylinder[1]"));
 
         yawShapes[0] = new MyShapes().makeTriangularShape(0.15f, 0.05f, 0.2f, 0.01f);
         yawShapes[0].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        yawShapes[0].setUserData(new String("yawShapes[0]"));
         yawShapes[1] = new MyShapes().makeTriangularShape(0.15f, 0.05f, 0.2f, 0.01f);
         yawShapes[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        yawShapes[1].setUserData(new String("yawShapes[1]"));
 
         // ustawienia położenia kształtów
         Transform3D yawRotation = new Transform3D();
@@ -237,7 +223,7 @@ public class Robot {
         yawTg3.addChild(yawShapes[1]);
 
         Transform3D yawTransform4 = new Transform3D();
-        yawTransform4.setTranslation(new Vector3f(0.0f, 0.f, 0.0f));
+        yawTransform4.setTranslation(new Vector3f(0.0f, 0.0f, 0.0f));
         TransformGroup yawTg4 = new TransformGroup(yawTransform4);
         yawTg4.addChild(yawCylinder[1]);
 
@@ -255,13 +241,10 @@ public class Robot {
         angles[4] = 0;
         pitchShapes[0] = new MyShapes().makeCuboid(0.2f, 0.025f, 0.15f);
         pitchShapes[0].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        pitchShapes[0].setUserData(new String("pitchShapes[0]"));
         pitchShapes[1] = new MyShapes().makeCuboid(0.1f, 0.05f, 0.1f);
         pitchShapes[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        pitchShapes[1].setUserData(new String("pitchShapes[1]"));
         pitchCylinder[0] = new Cylinder(0.05f, 0.2f);
         pitchCylinder[0].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        pitchCylinder[0].setUserData(new String("pitchCyinder[0]"));
 
         // ustawienia położenia kształtów
         Transform3D pitchTransform1 = new Transform3D();
@@ -298,8 +281,6 @@ public class Robot {
         angles[5] = 0;
         joint[2] = new Sphere(0.06f);
         joint[2].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        joint[2].setUserData(new String("joint[2]"));
-        joint[2].getShape().setUserData("joint[2]");
         transformJoint[2] = new Transform3D();
         transformJoint[2].setTranslation(new Vector3f(0.0f, 0.15f, 0.0f));
         tgJoint[2] = new TransformGroup(transformJoint[2]);
@@ -309,14 +290,10 @@ public class Robot {
 
         rollCylinder[0] = new Cylinder(0.05f, 0.1f);
         rollCylinder[0].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        rollCylinder[0].setUserData(new String("rollCylinder[0]"));
-        rollCylinder[0].getShape(Cylinder.TOP).setUserData("rollCylinder[0]");
         rollShapes[0] = new MyShapes().makeTriangularShape(0.05f, 0.02f, 0.05f, 0.01f);
         rollShapes[0].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        rollShapes[0].setUserData(new String("rollShapes[0]"));
         rollShapes[1] = new MyShapes().makeTriangularShape(0.05f, 0.02f, 0.05f, 0.01f);
         rollShapes[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
-        rollShapes[1].setUserData(new String("rollShapes[1]"));
 
         // ustawienia położenia kształtów
         Transform3D rollTransform1 = new Transform3D();
@@ -366,5 +343,67 @@ public class Robot {
 
     public TransformGroup getGroup(){
         return group;
+    }
+
+    public Vector3f handPos(){
+        Vector3f pos = new Vector3f(0.0f, 0.0f, 0.0f);
+
+        Vector3f[] vec = new Vector3f[6];
+        Vector3f[] vecP = new Vector3f[6];
+
+        for(int i=0; i<6; i++){
+            vecP[i] = new Vector3f(0.0f, 0.0f, 0.0f);
+        }
+
+        float[] dlugosc = new float[6];
+        dlugosc[0] = 0.45f;
+        dlugosc[1] = 0.7f;
+        dlugosc[2] = 0.4f;
+        dlugosc[3] = 0.35f;
+        dlugosc[4] = 0.15f;
+        dlugosc[5] = 0.17f;
+
+        // poczatkowe polozenie koncowki kazdego ze stopnia swobody (ich poczatek jest na koncu poprzedniego stopnia)
+        vec[0] = new Vector3f(0.0f, dlugosc[0], 0.0f);
+        vec[1] = new Vector3f(0.0f, dlugosc[1], 0.0f);
+        vec[2] = new Vector3f(0.0f, dlugosc[2], 0.0f);
+        vec[3] = new Vector3f(0.0f, dlugosc[3], 0.0f);
+        vec[4] = new Vector3f(0.0f, dlugosc[4], 0.0f);
+        vec[5] = new Vector3f(0.0f, dlugosc[5], 0.0f);
+
+        vecP[0].x = vec[0].x * (float)Math.cos(angles[0]) + vec[0].z * (float)Math.sin(angles[0]);
+        vecP[0].y = vec[0].y;
+        vecP[0].z = -vec[0].x * (float)Math.sin(angles[0]) + vec[0].z * (float)Math.cos(angles[0]);
+        System.out.println(angles[0]);
+
+        vecP[1].x = vec[1].x * (float)Math.cos(angles[1]) - vec[1].y * (float)Math.sin(angles[1]);
+        vecP[1].y = vec[1].x * (float)Math.sin(angles[1]) + vec[1].y * (float)Math.cos(angles[1]);
+        vecP[1].z = vec[1].z;
+
+        vecP[2].x = vec[2].x * (float)Math.cos(angles[2]+angles[1]) - vec[2].y * (float)Math.sin(angles[2]+angles[1]);
+        vecP[2].y = vec[2].x * (float)Math.sin(angles[2]+angles[1]) + vec[2].y * (float)Math.cos(angles[2]+angles[1]);
+        vecP[2].z = vec[2].z;
+
+        vecP[3].x = vec[3].x * (float)Math.cos(angles[3]) + vec[3].z * (float)Math.sin(angles[3]);
+        vecP[3].y = vec[3].y;
+        vecP[3].z = -vec[3].x * (float)Math.sin(angles[3]) + vec[3].z * (float)Math.cos(angles[3]);
+
+        vecP[4].x = vec[4].x * (float)Math.cos(angles[4]) - vec[4].y * (float)Math.sin(angles[4]);
+        vecP[4].y = vec[4].x * (float)Math.sin(angles[4]) + vec[4].y * (float)Math.cos(angles[4]);
+        vecP[4].z = vec[4].z;
+
+        vecP[5].x = vec[5].x;
+        vecP[5].y = vec[5].y * (float)Math.cos(angles[5]) - vec[5].z * (float)Math.sin(angles[5]);
+        vec[5].z = vec[5].y * (float)Math.sin(angles[5]) + vec[5].z * (float)Math.cos(angles[5]);
+
+        for(int i=0; i<2; i++){
+            pos.x += vecP[i].x;
+            pos.y += vecP[i].y;
+            pos.z += vecP[i].z;
+        }
+
+        System.out.println(pos);
+
+        return pos;
     }
 }
