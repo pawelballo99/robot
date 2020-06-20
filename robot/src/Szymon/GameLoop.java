@@ -1,5 +1,4 @@
 import javax.media.j3d.*;
-import javax.vecmath.Vector3f;
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 
@@ -25,10 +24,12 @@ public class GameLoop extends Behavior {
         while (criteria.hasMoreElements()) {
             WakeupCriterion theCriterion = (WakeupCriterion) criteria.nextElement();
             if (theCriterion instanceof WakeupOnElapsedTime) {
-                if(world.objY > 0.16f && !world.objColl)
-                    world.objY -= 0.01f;
-                world.objectTransform.setTranslation(new Vector3f(world.objX, world.objY, world.objZ));
-                world.objectTg.setTransform(world.objectTransform);
+                if(world.objPos.y > 0.16f && !world.objHold) {
+                    world.objPos.y -= 0.01f;
+                    world.objectTransform.setTranslation(world.objPos);
+                    world.objectTg.setTransform(world.objectTransform);
+                }
+
                 move();
             }
         }

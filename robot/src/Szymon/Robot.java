@@ -7,13 +7,12 @@ import javax.vecmath.Color4f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
-public class Robot implements KeyListener {
+public class Robot {
 
     // transformgroup całego robota
-    private TransformGroup group;
+    public TransformGroup group;
+//    private TransformGroup group;
     // kąty każdego ramienia
     public float angles[];
 //    private float angles[];
@@ -334,6 +333,9 @@ public class Robot implements KeyListener {
         transformArm[5].setTranslation(new Vector3f(0.0f, 0.1f, 0.0f));
         tgArm[5] = new TransformGroup(transformArm[5]);
         tgArm[5].setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        tgArm[5].setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+        tgArm[5].setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
+        tgArm[5].setCapability(TransformGroup.ALLOW_CHILDREN_READ);
         tgArm[5].addChild(rollCylinder[0]);
         tgArm[5].addChild(rollTg1);
         tgArm[5].addChild(rollTg2);
@@ -341,137 +343,6 @@ public class Robot implements KeyListener {
         tgJoint[2].addChild(tgArm[5]);
 
         return bg;
-    }
-
-    // key manager
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // obsługa sterowania robotem
-        // sterowanie obrotem ramienia
-//        if (e.getKeyChar() == 'a') {
-//            angles[0] -= Math.PI / robotSpeed;
-//            tmp.rotY(Math.PI / robotSpeed);
-//            transformArm[0].mul(tmp);
-//            tgArm[0].setTransform(transformArm[0]);
-//            this.lastMove = 'a';
-//        }
-//        if (e.getKeyChar() == 'd') {
-//            angles[0] += Math.PI / robotSpeed;
-//            tmp.rotY(-Math.PI / robotSpeed);
-//            transformArm[0].mul(tmp);
-//            tgArm[0].setTransform(transformArm[0]);
-//            this.lastMove = 'd';
-//        }
-//        // sterowanie położeniem barku
-//        if (e.getKeyChar() == 'w') {
-//            angles[1] -= Math.PI / robotSpeed;
-//            if (angles[1] < -Math.PI / 6) angles[1] = (float) (-30 * Math.PI / 180);
-//            else{
-//                tmp.rotZ(Math.PI / robotSpeed);
-//                transformJoint[0].mul(tmp);
-//                tgJoint[0].setTransform(transformJoint[0]);
-//            }
-//            this.lastMove = 'w';
-//        }
-//        if (e.getKeyChar() == 's') {
-//            angles[1] += Math.PI / robotSpeed;
-//            if (angles[1] > Math.PI / 2) angles[1] = (float) (Math.PI / 2);
-//            else {
-//                tmp.rotZ(-Math.PI / robotSpeed);
-//                transformJoint[0].mul(tmp);
-//                tgJoint[0].setTransform(transformJoint[0]);
-//            }
-//            this.lastMove = 's';
-//        }
-//        // sterowanie położeniem łokcia
-//        if (e.getKeyChar() == 'q') {
-//            angles[2] -= Math.PI / robotSpeed;
-//            if(angles[2]<0) angles[2]=0;
-//            else {
-//                tmp.rotZ(Math.PI / robotSpeed);
-//                transformJoint[1].mul(tmp);
-//                tgJoint[1].setTransform(transformJoint[1]);
-//            }
-//            this.lastMove = 'q';
-//        }
-//        if (e.getKeyChar() == 'e') {
-//            angles[2] += Math.PI / robotSpeed;
-//            if(angles[2]>105*Math.PI/180) angles[2]=(float)(105*Math.PI/180);
-//            else {
-//                tmp.rotZ(-Math.PI / robotSpeed);
-//                transformJoint[1].mul(tmp);
-//                tgJoint[1].setTransform(transformJoint[1]);
-//            }
-//            this.lastMove = 'e';
-//        }
-//        // sterowaniem obrotem roll
-//        if (e.getKeyChar() == 'u') {
-//            angles[3] -= Math.PI / robotSpeed;
-//            tmp.rotY(Math.PI / robotSpeed);
-//            transformArm[3].mul(tmp);
-//            tgArm[3].setTransform(transformArm[3]);
-//            this.lastMove = 'u';
-//        }
-//        if (e.getKeyChar() == 'o') {
-//            angles[3] += Math.PI / robotSpeed;
-//            tmp.rotY(-Math.PI / robotSpeed);
-//            transformArm[3].mul(tmp);
-//            tgArm[3].setTransform(transformArm[3]);
-//            this.lastMove = 'o';
-//        }
-//        // sterowanie pitch
-//        if (e.getKeyChar() == 'i') {
-//            angles[4] -= Math.PI / robotSpeed;
-//            if(angles[4]<-Math.PI/2) angles[4]=(float)(-Math.PI/2);
-//            else {
-//                tmp.rotZ(Math.PI / robotSpeed);
-//                transformArm[4].mul(tmp);
-//                tgArm[4].setTransform(transformArm[4]);
-//            }
-//            this.lastMove = 'i';
-//        }
-//        if (e.getKeyChar() == 'k') {
-//            angles[4] += Math.PI / robotSpeed;
-//            if(angles[4]>Math.PI/2) angles[4]=(float)(Math.PI/2);
-//            else {
-//                tmp.rotZ(-Math.PI / robotSpeed);
-//                transformArm[4].mul(tmp);
-//                tgArm[4].setTransform(transformArm[4]);
-//            }
-//            this.lastMove = 'k';
-//        }
-//        // sterowanie yaw
-//        if (e.getKeyChar() == 'j') {
-//            angles[5] -= Math.PI / robotSpeed;
-//            if(angles[5]<-Math.PI/4)angles[5]=(float)(-Math.PI/4);
-//            else {
-//                tmp.rotX(Math.PI / robotSpeed);
-//                transformJoint[2].mul(tmp);
-//                tgJoint[2].setTransform(transformJoint[2]);
-//            }
-//            this.lastMove = 'j';
-//        }
-//        if (e.getKeyChar() == 'l') {
-//            angles[5] += Math.PI / robotSpeed;
-//            if(angles[5]>Math.PI/4)angles[5]=(float)(Math.PI/4);
-//            else {
-//                tmp.rotX(-Math.PI / robotSpeed);
-//                transformJoint[2].mul(tmp);
-//                tgJoint[2].setTransform(transformJoint[2]);
-//            }
-//            this.lastMove = 'l';
-//        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // invoke when key has been released
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // invoke when key has been only typed
-
     }
 
     public Appearance createAppearance(Color3f color){

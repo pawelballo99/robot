@@ -39,9 +39,6 @@ public class CollisionDetector extends Behavior {
             } else if(theCriterion instanceof WakeupOnCollisionExit){
                 toAllow();
             }
-//            if (theCriterion instanceof WakeupOnCollisionEntry || theCriterion instanceof WakeupOnCollisionMovement) {
-//                makeMove();
-//            }
             wakeupOn(oredCriteria);
         }
     }

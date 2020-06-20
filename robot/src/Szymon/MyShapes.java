@@ -251,7 +251,7 @@ public class MyShapes {
         return new Shape3D(result);
     }
 
-    public Shape3D makeGround(){
+    public Shape3D makeGround(Point3f rightUp, Point3f rightDown, Point3f leftDown, Point3f leftUp){
         Point3f[]  coords = new Point3f[8];
         for(int i = 0; i< 8; i++)
             coords[i] = new Point3f();
@@ -260,35 +260,15 @@ public class MyShapes {
         for(int i = 0; i< 8; i++)
             tex_coords[i] = new Point2f();
 
-        coords[0].y = 0.0f;
-        coords[1].y = 0.0f;
-        coords[2].y = 0.0f;
-        coords[3].y = 0.0f;
+        coords[0] = rightUp;
+        coords[1] = rightDown;
+        coords[2] = leftDown;
+        coords[3] = leftUp;
 
-        coords[0].x = 5f;
-        coords[1].x = 5f;
-        coords[2].x = -5f;
-        coords[3].x = -5f;
-
-        coords[0].z = 5f;
-        coords[1].z = -5f;
-        coords[2].z = -5f;
-        coords[3].z = 5f;
-
-        coords[4].y = 0f;
-        coords[5].y = 0f;
-        coords[6].y = 0f;
-        coords[7].y = 0f;
-
-        coords[4].x = 5f;
-        coords[5].x = 5f;
-        coords[6].x = -5f;
-        coords[7].x = -5f;
-
-        coords[4].z = -5f;
-        coords[5].z = 5f;
-        coords[6].z = 5f;
-        coords[7].z = -5f;
+        coords[4] = rightDown;
+        coords[5] = rightUp;
+        coords[6] = leftUp;
+        coords[7] = leftDown;
 
         tex_coords[0].x = 0.0f;
         tex_coords[0].y = 0.0f;
