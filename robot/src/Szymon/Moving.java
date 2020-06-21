@@ -1,3 +1,5 @@
+// klasa obsługująca klawiaturę
+
 import javax.media.j3d.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -40,19 +42,19 @@ public class Moving extends Behavior {
 
     }
 
-    public void processAWTEvent(AWTEvent[] events){
+    private void processAWTEvent(AWTEvent[] events){
+        // sprawdzamy które przyciski są trzymane a które puszczone i nadajemy wartość true lub false
+        // do tablicy boolowskiej, dzięki takiemu sposobowi możemy wykonywać dwa ruchy jednocześnie
         for(int n=0; n<events.length; n++){
             if(events[n] instanceof KeyEvent){
                 KeyEvent key = (KeyEvent) events[n];
 
                 if(key.getID() == KeyEvent.KEY_PRESSED){
-                    int keyChar = key.getKeyChar();
                     int keyCode = key.getKeyCode();
 
                     robot.key[keyCode] = true;
 
                 } else if(key.getID() == KeyEvent.KEY_RELEASED){
-                    int keyChar = key.getKeyChar();
                     int keyCode = key.getKeyCode();
 
                     robot.key[keyCode] = false;

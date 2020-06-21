@@ -1,16 +1,18 @@
+// klasa wykrywająca kolizje
+
 import javax.media.j3d.*;
 import java.util.Enumeration;
 
 public class CollisionDetector extends Behavior {
-    public Shape3D collidingShape;
+    private Shape3D collidingShape;
 
-    public WakeupCriterion[] theCriteria;
+    private WakeupCriterion[] theCriteria;
 
-    public WakeupOr oredCriteria;
+    private WakeupOr oredCriteria;
 
-    public World world;
+    private World world;
 
-    public Robot robot;
+    private Robot robot;
 
     public CollisionDetector(Shape3D theShape, Bounds theBounds, World world, Robot robot){
         collidingShape = theShape;
@@ -43,7 +45,8 @@ public class CollisionDetector extends Behavior {
         }
     }
 
-    public void toNotAllow(){
+    private void toNotAllow(){
+        // jeśli wystąpiła kolizja to blokujemy ruch w tym kierunku
         if(robot.lastMove == 'a'){
             robot.notAllow[0] = true;
         }
@@ -85,126 +88,13 @@ public class CollisionDetector extends Behavior {
         }
     }
 
-    public void toAllow(){
+    private void toAllow(){
+        // jesli koniec kolizji to odblokowujemy wszystkie ruchy
         for(int i=0; i<12; i++){
             robot.notAllow[i] = false;
         }
         if(collidingShape.getUserData() != "object"){
             world.objColl = false;
-        }
-//        System.out.println("wyszlo");
-//        if(robot.lastMove == 'a'){
-//            robot.notAllow[0] = false;
-//        }
-//        if(robot.lastMove == 'd'){
-//            robot.notAllow[1] = false;
-//        }
-//        if(robot.lastMove == 'w'){
-//            robot.notAllow[2] = false;
-//            System.out.println("odbroniono w");
-//        }
-//        if(robot.lastMove == 's'){
-//            robot.notAllow[3] = false;
-//            System.out.println("odbroniono s");
-//        }
-//        if(robot.lastMove == 'q'){
-//            robot.notAllow[4] = false;
-//        }
-//        if(robot.lastMove == 'e'){
-//            robot.notAllow[5] = false;
-//        }
-//        if(robot.lastMove == 'u'){
-//            robot.notAllow[6] = false;
-//        }
-//        if(robot.lastMove == 'o'){
-//            robot.notAllow[7] = false;
-//        }
-//        if(robot.lastMove == 'i'){
-//            robot.notAllow[8] = false;
-//        }
-//        if(robot.lastMove == 'k'){
-//            robot.notAllow[9] = false;
-//        }
-//        if(robot.lastMove == 'j'){
-//            robot.notAllow[10] = false;
-//        }
-//        if(robot.lastMove == 'l'){
-//            robot.notAllow[11] = false;
-//        }
-    }
-
-    public void makeMove(){
-        if(robot.lastMove == 'a'){
-            robot.tmp.rotY(-Math.PI / robot.robotSpeed);
-            robot.transformArm[0].mul(robot.tmp);
-            robot.tgArm[0].setTransform(robot.transformArm[0]);
-            robot.angles[0] += Math.PI / robot.robotSpeed;
-        }
-        if(robot.lastMove == 'd'){
-            robot.tmp.rotY(Math.PI / robot.robotSpeed);
-            robot.transformArm[0].mul(robot.tmp);
-            robot.tgArm[0].setTransform(robot.transformArm[0]);
-            robot.angles[0] -= Math.PI / robot.robotSpeed;
-        }
-        if(robot.lastMove == 'w'){
-            robot.tmp.rotZ(-Math.PI / robot.robotSpeed);
-            robot.transformJoint[0].mul(robot.tmp);
-            robot.tgJoint[0].setTransform(robot.transformJoint[0]);
-            robot.angles[1] += Math.PI / robot.robotSpeed;
-        }
-        if(robot.lastMove == 's'){
-            robot.tmp.rotZ(Math.PI / robot.robotSpeed);
-            robot.transformJoint[0].mul(robot.tmp);
-            robot.tgJoint[0].setTransform(robot.transformJoint[0]);
-            robot.angles[1] -= Math.PI / robot.robotSpeed;
-        }
-        if(robot.lastMove == 'q'){
-            robot.tmp.rotZ(-Math.PI / robot.robotSpeed);
-            robot.transformJoint[1].mul(robot.tmp);
-            robot.tgJoint[1].setTransform(robot.transformJoint[1]);
-            robot.angles[2] += Math.PI / robot.robotSpeed;
-        }
-        if(robot.lastMove == 'e'){
-            robot.tmp.rotZ(Math.PI / robot.robotSpeed);
-            robot.transformJoint[1].mul(robot.tmp);
-            robot.tgJoint[1].setTransform(robot.transformJoint[1]);
-            robot.angles[2] -= Math.PI / robot.robotSpeed;
-        }
-        if(robot.lastMove == 'u'){
-            robot.tmp.rotY(-Math.PI / robot.robotSpeed);
-            robot.transformArm[3].mul(robot.tmp);
-            robot.tgArm[3].setTransform(robot.transformArm[3]);
-            robot.angles[3] += Math.PI / robot.robotSpeed;
-        }
-        if(robot.lastMove == 'o'){
-            robot.tmp.rotY(Math.PI / robot.robotSpeed);
-            robot.transformArm[3].mul(robot.tmp);
-            robot.tgArm[3].setTransform(robot.transformArm[3]);
-            robot.angles[3] -= Math.PI / robot.robotSpeed;
-        }
-        if(robot.lastMove == 'i'){
-            robot.tmp.rotZ(-Math.PI / robot.robotSpeed);
-            robot.transformArm[4].mul(robot.tmp);
-            robot.tgArm[4].setTransform(robot.transformArm[4]);
-            robot.angles[4] += Math.PI / robot.robotSpeed;
-        }
-        if(robot.lastMove == 'k'){
-            robot.tmp.rotZ(Math.PI / robot.robotSpeed);
-            robot.transformArm[4].mul(robot.tmp);
-            robot.tgArm[4].setTransform(robot.transformArm[4]);
-            robot.angles[4] -= Math.PI / robot.robotSpeed;
-        }
-        if(robot.lastMove == 'j'){
-            robot.tmp.rotX(-Math.PI / robot.robotSpeed);
-            robot.transformJoint[2].mul(robot.tmp);
-            robot.tgJoint[2].setTransform(robot.transformJoint[2]);
-            robot.angles[5] += Math.PI / robot.robotSpeed;
-        }
-        if(robot.lastMove == 'l'){
-            robot.tmp.rotX(Math.PI / robot.robotSpeed);
-            robot.transformJoint[2].mul(robot.tmp);
-            robot.tgJoint[2].setTransform(robot.transformJoint[2]);
-            robot.angles[5] -= Math.PI / robot.robotSpeed;
         }
     }
 }

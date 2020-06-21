@@ -14,13 +14,8 @@ public class World extends JFrame {
 
     private Robot robot;
     private SimpleUniverse simpleU;
-    private Canvas3D canvas3d;
 
-    public Vector3f objPos = new Vector3f(1.5f, 0.5f, 0.0f);
-    public Transform3D objectTransform;
-    public TransformGroup objectTg;
-    public boolean objColl = false;
-    public boolean objHold = false;
+    // definicja przycisków
     public JButton catchObject;
     public JButton letGoObject;
     public JButton startRecording;
@@ -28,13 +23,35 @@ public class World extends JFrame {
     public JButton playRecording;
     public JButton stopPlayRecording;
     public JButton resetCameraView;
+
+    // obiekt, polozenie i jego transformacje
+    public Sphere object;
+    public Vector3f objPos = new Vector3f(1.5f, 0.5f, 0.0f);
+    public Transform3D objectTransform;
+    public TransformGroup objectTg;
     public TransformGroup world;
     public BranchGroup objectGroup;
-    public Sphere object;
+
+    // zmienna mówiąca czy jest kolizja na obiekcie
+    public boolean objColl = false;
+
+    // zmienna mówiąca czy obiekt jest trzymany przez nasz manipulator
+    public boolean objHold = false;
+
+    // zmienna mówiąca czy właśnie nagrywamy
     public boolean recording = false;
-    public boolean recordingPlay = false;
     public int recordingCount = 0;
+
+    // zmienna mówiąca czy odtwarzamy nagranie
+    public boolean recordingPlay = false;
     public int playingRecordCount = 0;
+
+    // zmienna mówiąca że ustawiamy położenie manipulatora do początkowego położenia podczas nagrywania
+    public boolean setting = false;
+    public int settingCount = 0;
+
+    // zmienna dajaca dostep do zmiennych klasy GameLoop
+    public GameLoop loop;
 
     World(){
         // tworzenie okienka
@@ -43,12 +60,12 @@ public class World extends JFrame {
         setResizable(false);
         setLayout(new BorderLayout());
 
-        robot = new Robot(this);
+        robot = new Robot();
 
         GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
 
         // tworzenie płótna
-        canvas3d = new Canvas3D(config);
+        Canvas3D canvas3d = new Canvas3D(config);
         canvas3d.setPreferredSize(new Dimension(800, 600));
 
         add("Center", canvas3d);
@@ -119,6 +136,7 @@ public class World extends JFrame {
     private BranchGroup getScene(){
         // branch grooup calej sceny
         BranchGroup scene = new BranchGroup();
+
         // transformgroup zawierający robota oraz podłoże
         world = new TransformGroup();
         world.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
@@ -134,8 +152,94 @@ public class World extends JFrame {
 
         // tworzenie scian
         float szerokoscScian = 10f;
+        makeWalls(szerokoscScian);
+
+        // tworzenie podłoża
+        TransformGroup ground = new TransformGroup();
+        Shape3D gr = new MyShapes().makeGround(new Point3f(szerokoscScian, 0f, szerokoscScian),
+                new Point3f(szerokoscScian, 0f, -szerokoscScian), new Point3f(-szerokoscScian, 0f, -szerokoscScian),
+                new Point3f(-szerokoscScian, 0f, szerokoscScian));
+        gr.setUserData(new String("ground"));
+        Appearance appGround = new Appearance();
+        appGround.setTexture(createTexture("grafika/floor.jpg"));
+        gr.setAppearance(appGround);
+
+        // detekcja kolizji dla ziemi
+        CollisionDetector collisionGround = new CollisionDetector(gr, new BoundingSphere(), this, robot);
+        ground.addChild(gr);
+        world.addChild(collisionGround);
+        world.addChild(ground);
+
+        // światła
+        Color3f light1Color = new Color3f(1.0f, 1.0f, 1.0f);
+        Vector3f light1Direction = new Vector3f(4.0f, -7.0f, -12.0f);
+        BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
+
+        DirectionalLight light1 = new DirectionalLight(light1Color, light1Direction);
+        light1.setInfluencingBounds(bounds);
+        scene.addChild(light1);
+
+        // obiekt do podnoszenia
+        object = new Sphere(0.15f, robot.createAppearance(new Color3f(Color.ORANGE)));
+        object.getShape().setUserData(new String("object"));
+        objectTransform = new Transform3D();
+        objectTransform.setTranslation(objPos);
+        objectTg = new TransformGroup(objectTransform);
+        objectTg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        objectTg.addChild(object);
+        objectGroup = new BranchGroup();
+        objectGroup.setCapability(BranchGroup.ALLOW_DETACH);
+        objectGroup.addChild(objectTg);
+        world.addChild(objectGroup);
+
+        // klasa behavior która służy do obsługiwania klawiatury
+        Moving moving = new Moving(robot);
+        moving.setSchedulingBounds(bounds);
+        world.addChild(moving);
+
+        // klasa behavior która odświeża się 60 razy na sekundę i odpowiada ona np. za nagrywanie, odtworzenie nagrania
+        // symulowanie grawitacji
+        loop = new GameLoop(this, robot);
+        loop.setSchedulingBounds(bounds);
+        world.addChild(loop);
+
+        // detekcja kolizji dla obiektu
+        CollisionDetector collisionObject = new CollisionDetector(object.getShape(), new BoundingSphere(new Point3d(), 0.15), this, robot);
+        world.addChild(collisionObject);
+
+        scene.addChild(world);
+
+        scene.compile();
+        return scene;
+    }
+
+    private Texture createTexture(String path) {
+        // Załadowanie tekstury
+        TextureLoader loader = new TextureLoader(path, null);
+        ImageComponent2D image = loader.getImage();
+
+        if (image == null) {
+            System.out.println("Nie udało się załadować tekstury: " + path);
+        }
+
+        Texture2D texture = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(), image.getHeight());
+
+        texture.setImage(0, image);
+        texture.setBoundaryModeS(Texture.WRAP);
+        texture.setBoundaryModeT(Texture.WRAP);
+
+        return texture;
+    }
+
+    public SimpleUniverse getSimpleU() {
+        return simpleU;
+    }
+
+    private void makeWalls(float szerokoscScian){
+        // metoda tworząca ściany
         Appearance appWall = new Appearance();
-        appWall.setTexture(createTexture("images/walls.jpg"));
+        appWall.setTexture(createTexture("grafika/walls.jpg"));
+
         // sciana 1
         TransformGroup wall1Tg = new TransformGroup();
         Shape3D wall1 = new MyShapes().makeGround(new Point3f(szerokoscScian, szerokoscScian, szerokoscScian),
@@ -189,80 +293,5 @@ public class World extends JFrame {
         world.addChild(wall4Tg);
         wall5Tg.addChild(wall5);
         world.addChild(wall5Tg);
-
-        // tworzenie podłoża
-        TransformGroup ground = new TransformGroup();
-        Shape3D gr = new MyShapes().makeGround(new Point3f(szerokoscScian, 0f, szerokoscScian),
-                new Point3f(szerokoscScian, 0f, -szerokoscScian), new Point3f(-szerokoscScian, 0f, -szerokoscScian),
-                new Point3f(-szerokoscScian, 0f, szerokoscScian));
-        gr.setUserData(new String("ground"));
-        Appearance appGround = new Appearance();
-        appGround.setTexture(createTexture("images/floor.jpg"));
-        gr.setAppearance(appGround);
-        CollisionDetector collisionGround = new CollisionDetector(gr, new BoundingSphere(), this, robot);
-
-        ground.addChild(gr);
-        world.addChild(collisionGround);
-        world.addChild(ground);
-
-        // światła
-        Color3f light1Color = new Color3f(1.0f, 1.0f, 1.0f);
-        Vector3f light1Direction = new Vector3f(4.0f, -7.0f, -12.0f);
-        BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
-
-        DirectionalLight light1 = new DirectionalLight(light1Color, light1Direction);
-        light1.setInfluencingBounds(bounds);
-        scene.addChild(light1);
-
-        // obiekt do podnoszenia
-        object = new Sphere(0.15f, robot.createAppearance(new Color3f(Color.ORANGE)));
-        object.getShape().setUserData(new String("object"));
-        objectTransform = new Transform3D();
-        objectTransform.setTranslation(objPos);
-        objectTg = new TransformGroup(objectTransform);
-        objectTg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        objectTg.addChild(object);
-        objectGroup = new BranchGroup();
-        objectGroup.setCapability(BranchGroup.ALLOW_DETACH);
-        objectGroup.addChild(objectTg);
-        world.addChild(objectGroup);
-
-        Moving moving = new Moving(robot);
-        moving.setSchedulingBounds(bounds);
-        world.addChild(moving);
-
-        GameLoop loop = new GameLoop(this, robot);
-        loop.setSchedulingBounds(bounds);
-        world.addChild(loop);
-
-        CollisionDetector collisionObject = new CollisionDetector(object.getShape(), new BoundingSphere(new Point3d(), 0.15), this, robot);
-        world.addChild(collisionObject);
-
-        scene.addChild(world);
-
-        scene.compile();
-        return scene;
-    }
-
-    private Texture createTexture(String path) {
-        // Załadowanie tekstury
-        TextureLoader loader = new TextureLoader(path, null);
-        ImageComponent2D image = loader.getImage();
-
-        if (image == null) {
-            System.out.println("Nie udało się załadować tekstury: " + path);
-        }
-
-        Texture2D texture = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(), image.getHeight());
-
-        texture.setImage(0, image);
-        texture.setBoundaryModeS(Texture.WRAP);
-        texture.setBoundaryModeT(Texture.WRAP);
-
-        return texture;
-    }
-
-    public SimpleUniverse getSimpleU() {
-        return simpleU;
     }
 }

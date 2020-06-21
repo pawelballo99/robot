@@ -1,3 +1,5 @@
+// klasa w której tworzymy własne kształty
+
 import com.sun.j3d.utils.geometry.GeometryInfo;
 import com.sun.j3d.utils.geometry.NormalGenerator;
 

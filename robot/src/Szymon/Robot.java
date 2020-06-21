@@ -1,10 +1,11 @@
+// klasa w której tworzymy naszego robota
+
 import com.sun.j3d.utils.geometry.Cylinder;
 import com.sun.j3d.utils.geometry.Sphere;
 
 import javax.media.j3d.*;
 import javax.vecmath.Color3f;
 import javax.vecmath.Color4f;
-import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 import java.awt.*;
 
@@ -12,19 +13,16 @@ public class Robot {
 
     // transformgroup całego robota
     public TransformGroup group;
-//    private TransformGroup group;
+
     // kąty każdego ramienia
     public float angles[];
-//    private float angles[];
-    // transformgroupy każdych części
+
+    // transformgroupy każdych części manipulatora
     public TransformGroup[] tgArm;
-//    private TransformGroup[] tgArm;
     public TransformGroup[] tgJoint;
-//    private TransformGroup[] tgJoint;
     public Transform3D[] transformArm;
-//    private Transform3D[] transformArm;
     public Transform3D[] transformJoint;
-//    private Transform3D[] transformJoint;
+
     // obiekty z których składa się robot
     private Sphere[] joint;
     private Shape3D[] arms;
@@ -34,22 +32,19 @@ public class Robot {
     private Cylinder[] yawCylinder;
     private Cylinder[] pitchCylinder;
     private Cylinder[] rollCylinder;
+
     // pomocna zmienna do zmiany transformacji
-    public Transform3D tmp;
-//    private Transform3D tmp;
+    private Transform3D tmp;
+
     // predkosc z jaka się obraca ramię - 1/180
     public float robotSpeed = 180;
-//    private float robotSpeed = 180;
-    private BoundingSphere bounds;
-    private World world;
 
     public char lastMove;
     public Boolean[] key;
     public Boolean[] notAllow;
 
-    Robot(World world){
+    Robot(){
         group = makeRobot();
-        this.world = world;
         key = new Boolean[256];
         notAllow = new Boolean[12];
         for(int i=0; i<256; i++){
@@ -77,7 +72,6 @@ public class Robot {
         rollCylinder = new Cylinder[1];
         joint = new Sphere[3];
         tmp = new Transform3D();
-        bounds = new BoundingSphere(new Point3d(), 10000.0);
 
         // podstawa
         Shape3D podst = new MyShapes().makeCustomCylinder(0.4f, 0.35f, 0.15f, 100);
@@ -118,7 +112,6 @@ public class Robot {
         // ramię
         // początkowy kąt ramienia
         angles[0] = 0;
-
         transformArm[0] = new Transform3D();
         transformArm[0].setTranslation(new Vector3f(0.0f, 0.2f, 0.0f));
         tgArm[0] = new TransformGroup(transformArm[0]);
@@ -146,9 +139,9 @@ public class Robot {
         TransformGroup tgJoint0Part0 = new TransformGroup(transformJoint0Part0);
         tgJoint0Part0.addChild(tgRotJoint0Part0);
 
+        // bark
         // początkowy kąt barku
         angles[1] = -(float)(Math.PI/4);
-
         transformJoint[0] = new Transform3D();
         transformJoint[0].setTranslation(new Vector3f(0.0f, 0.25f, 0.0f));
         tmp.rotZ(-Math.PI/4);
@@ -159,7 +152,6 @@ public class Robot {
         tgJoint[0].addChild(tgJoint0Part0);
         tgArm[0].addChild(tgJoint[0]);
 
-        // bark
         arms[1] = new MyShapes().makeCustomCylinder(0.1f, 0.08f, 0.5f, 100);
         arms[1].setAppearance(createAppearance(new Color3f(Color.ORANGE)));
         transformArm[1] = new Transform3D();
@@ -323,7 +315,7 @@ public class Robot {
     }
 
     public Appearance createAppearance(Color3f color){
-        // funkcja która zwraca wygląd z kolorem który podamy
+        // metoda która zwraca wygląd z kolorem który podamy
         Appearance appearance = new Appearance();
         Color3f black = new Color3f(0.0f, 0.0f, 0.0f);
         Color3f white = new Color3f(1.0f, 1.0f, 1.0f);
@@ -346,63 +338,19 @@ public class Robot {
     }
 
     public Vector3f handPos(){
-        Vector3f pos = new Vector3f(0.0f, 0.0f, 0.0f);
+        // metoda zwracająca pozycję końcówki chwytaka
+        Vector3f pos;
 
-        Vector3f[] vec = new Vector3f[6];
-        Vector3f[] vecP = new Vector3f[6];
-
-        for(int i=0; i<6; i++){
-            vecP[i] = new Vector3f(0.0f, 0.0f, 0.0f);
-        }
-
-        float[] dlugosc = new float[6];
-        dlugosc[0] = 0.45f;
-        dlugosc[1] = 0.7f;
-        dlugosc[2] = 0.4f;
-        dlugosc[3] = 0.35f;
-        dlugosc[4] = 0.15f;
-        dlugosc[5] = 0.17f;
-
-        // poczatkowe polozenie koncowki kazdego ze stopnia swobody (ich poczatek jest na koncu poprzedniego stopnia)
-        vec[0] = new Vector3f(0.0f, dlugosc[0], 0.0f);
-        vec[1] = new Vector3f(0.0f, dlugosc[1], 0.0f);
-        vec[2] = new Vector3f(0.0f, dlugosc[2], 0.0f);
-        vec[3] = new Vector3f(0.0f, dlugosc[3], 0.0f);
-        vec[4] = new Vector3f(0.0f, dlugosc[4], 0.0f);
-        vec[5] = new Vector3f(0.0f, dlugosc[5], 0.0f);
-
-        vecP[0].x = vec[0].x * (float)Math.cos(angles[0]) + vec[0].z * (float)Math.sin(angles[0]);
-        vecP[0].y = vec[0].y;
-        vecP[0].z = -vec[0].x * (float)Math.sin(angles[0]) + vec[0].z * (float)Math.cos(angles[0]);
-        System.out.println(angles[0]);
-
-        vecP[1].x = vec[1].x * (float)Math.cos(angles[1]) - vec[1].y * (float)Math.sin(angles[1]);
-        vecP[1].y = vec[1].x * (float)Math.sin(angles[1]) + vec[1].y * (float)Math.cos(angles[1]);
-        vecP[1].z = vec[1].z;
-
-        vecP[2].x = vec[2].x * (float)Math.cos(angles[2]+angles[1]) - vec[2].y * (float)Math.sin(angles[2]+angles[1]);
-        vecP[2].y = vec[2].x * (float)Math.sin(angles[2]+angles[1]) + vec[2].y * (float)Math.cos(angles[2]+angles[1]);
-        vecP[2].z = vec[2].z;
-
-        vecP[3].x = vec[3].x * (float)Math.cos(angles[3]) + vec[3].z * (float)Math.sin(angles[3]);
-        vecP[3].y = vec[3].y;
-        vecP[3].z = -vec[3].x * (float)Math.sin(angles[3]) + vec[3].z * (float)Math.cos(angles[3]);
-
-        vecP[4].x = vec[4].x * (float)Math.cos(angles[4]) - vec[4].y * (float)Math.sin(angles[4]);
-        vecP[4].y = vec[4].x * (float)Math.sin(angles[4]) + vec[4].y * (float)Math.cos(angles[4]);
-        vecP[4].z = vec[4].z;
-
-        vecP[5].x = vec[5].x;
-        vecP[5].y = vec[5].y * (float)Math.cos(angles[5]) - vec[5].z * (float)Math.sin(angles[5]);
-        vec[5].z = vec[5].y * (float)Math.sin(angles[5]) + vec[5].z * (float)Math.cos(angles[5]);
-
-        for(int i=0; i<2; i++){
-            pos.x += vecP[i].x;
-            pos.y += vecP[i].y;
-            pos.z += vecP[i].z;
-        }
-
-        System.out.println(pos);
+        tmp.setTranslation(new Vector3f(0.0f, 0.25f, 0.0f));
+        transformArm[5].mul(tmp);
+        tgArm[5].setTransform(transformArm[5]);
+        Transform3D tr = new Transform3D();
+        Vector3f v = new Vector3f();
+        rollShapes[0].getLocalToVworld(tr);
+        tr.get(v);
+        pos = v;
+        transformArm[5].mulInverse(tmp);
+        tgArm[5].setTransform(transformArm[5]);
 
         return pos;
     }
