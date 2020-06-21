@@ -1,6 +1,10 @@
 import javax.media.j3d.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.vecmath.Matrix3d;
+import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.Enumeration;
 
 public class GameLoop extends Behavior {
@@ -8,7 +12,9 @@ public class GameLoop extends Behavior {
     private WakeupOr oredCriteria;
     private World world;
     private Robot robot;
-
+    private File dzwiek1;
+    private File dzwiek2;
+    private File dzwiek3;
     private float angles[][];
     private int recordingLimit = 60; // ile sekund maksymalnie mozna nagrywac
 
@@ -16,6 +22,17 @@ public class GameLoop extends Behavior {
         this.world = world;
         this.robot = robot;
         angles = new float[60*recordingLimit][6];
+        dzwiek1= new File("sounds/duzy_dzwiek.wav");
+        dzwiek2= new File("sounds/sredni_dzwiek.wav");
+        dzwiek3= new File("sounds/maly_dzwiek.wav");
+    }
+
+    static void PlaySound(File Sound){
+            try{
+                Clip clip= AudioSystem.getClip();
+                clip.open(AudioSystem.getAudioInputStream(Sound));
+                clip.start();
+            }catch (Exception e){}
     }
 
     public void initialize(){
@@ -72,6 +89,7 @@ public class GameLoop extends Behavior {
                     0, 1, 0,
                     -Math.sin(robot.angles[0]), 0, Math.cos(robot.angles[0])));
             robot.tgArm[0].setTransform(robot.transformArm[0]);
+            PlaySound(dzwiek1);
             robot.lastMove = 'a';
         }
         if (robot.key[KeyEvent.VK_D] && !robot.notAllow[1]) {
@@ -80,6 +98,7 @@ public class GameLoop extends Behavior {
                     0, 1, 0,
                     -Math.sin(robot.angles[0]), 0, Math.cos(robot.angles[0])));
             robot.tgArm[0].setTransform(robot.transformArm[0]);
+            PlaySound(dzwiek1);
             robot.lastMove = 'd';
         }
         // sterowanie położeniem barku
@@ -92,6 +111,7 @@ public class GameLoop extends Behavior {
                         0, 0, 1));
                 robot.tgJoint[0].setTransform(robot.transformJoint[0]);
             }
+            PlaySound(dzwiek1);
             robot.lastMove = 'w';
         }
         if (robot.key[KeyEvent.VK_S] && !robot.notAllow[3]) {
@@ -103,6 +123,7 @@ public class GameLoop extends Behavior {
                         0, 0, 1));
                 robot.tgJoint[0].setTransform(robot.transformJoint[0]);
             }
+            PlaySound(dzwiek1);
             robot.lastMove = 's';
         }
         // sterowanie położeniem łokcia
@@ -115,6 +136,7 @@ public class GameLoop extends Behavior {
                         0, 0, 1));
                 robot.tgJoint[1].setTransform(robot.transformJoint[1]);
             }
+            PlaySound(dzwiek2);
             robot.lastMove = 'q';
         }
         if (robot.key[KeyEvent.VK_E] && !robot.notAllow[5]) {
@@ -126,6 +148,7 @@ public class GameLoop extends Behavior {
                         0, 0, 1));
                 robot.tgJoint[1].setTransform(robot.transformJoint[1]);
             }
+            PlaySound(dzwiek2);
             robot.lastMove = 'e';
         }
         // sterowaniem obrotem roll
@@ -135,6 +158,7 @@ public class GameLoop extends Behavior {
                     0, 1, 0,
                     -Math.sin(robot.angles[3]), 0, Math.cos(robot.angles[3])));
             robot.tgArm[3].setTransform(robot.transformArm[3]);
+            PlaySound(dzwiek2);
             robot.lastMove = 'u';
         }
         if (robot.key[KeyEvent.VK_O] && !robot.notAllow[7]) {
@@ -143,6 +167,7 @@ public class GameLoop extends Behavior {
                     0, 1, 0,
                     -Math.sin(robot.angles[3]), 0, Math.cos(robot.angles[3])));
             robot.tgArm[3].setTransform(robot.transformArm[3]);
+            PlaySound(dzwiek2);
             robot.lastMove = 'o';
         }
         // sterowanie pitch
@@ -155,6 +180,7 @@ public class GameLoop extends Behavior {
                         0, 0, 1));
                 robot.tgArm[4].setTransform(robot.transformArm[4]);
             }
+            PlaySound(dzwiek3);
             robot.lastMove = 'i';
         }
         if (robot.key[KeyEvent.VK_K] && !robot.notAllow[9]) {
@@ -166,6 +192,7 @@ public class GameLoop extends Behavior {
                         0, 0, 1));
                 robot.tgArm[4].setTransform(robot.transformArm[4]);
             }
+            PlaySound(dzwiek3);
             robot.lastMove = 'k';
         }
         // sterowanie yaw
@@ -179,6 +206,7 @@ public class GameLoop extends Behavior {
                         0, Math.sin(robot.angles[5]), Math.cos(robot.angles[5])));
                 robot.tgJoint[2].setTransform(robot.transformJoint[2]);
             }
+            PlaySound(dzwiek3);
             robot.lastMove = 'j';
         }
         if (robot.key[KeyEvent.VK_L] && !robot.notAllow[11]) {
@@ -192,6 +220,7 @@ public class GameLoop extends Behavior {
                 robot.tgJoint[2].setTransform(robot.transformJoint[2]);
             }
             robot.lastMove = 'l';
+            PlaySound(dzwiek3);
         }
     }
 

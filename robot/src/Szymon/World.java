@@ -135,7 +135,7 @@ public class World extends JFrame {
         // tworzenie scian
         float szerokoscScian = 10f;
         Appearance appWall = new Appearance();
-        appWall.setTexture(createTexture("grafika/walls.jpg"));
+        appWall.setTexture(createTexture("images/walls.jpg"));
         // sciana 1
         TransformGroup wall1Tg = new TransformGroup();
         Shape3D wall1 = new MyShapes().makeGround(new Point3f(szerokoscScian, szerokoscScian, szerokoscScian),
@@ -197,7 +197,7 @@ public class World extends JFrame {
                 new Point3f(-szerokoscScian, 0f, szerokoscScian));
         gr.setUserData(new String("ground"));
         Appearance appGround = new Appearance();
-        appGround.setTexture(createTexture("grafika/floor.jpg"));
+        appGround.setTexture(createTexture("images/floor.jpg"));
         gr.setAppearance(appGround);
         CollisionDetector collisionGround = new CollisionDetector(gr, new BoundingSphere(), this, robot);
 
